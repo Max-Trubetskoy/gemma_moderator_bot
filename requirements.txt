@@ -1,5 +1,6 @@
 # requirements.txt
 Flask
+uvicorn
 gunicorn
 python-telegram-bot
 google-genai
