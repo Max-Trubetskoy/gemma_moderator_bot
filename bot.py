@@ -42,7 +42,7 @@ Therefore, you must analyze all available context to determine if they are safe 
 CRITERIA FOR BOTS/SPAM:
 - PROFILE NAME: Names with a strange mix of Cyrillic and Latin characters (e.g., "Мария Знаkмлсьь") are highly suspicious.
 - PROFILE IMAGE: Images containing nudity, suggestive content, or advertising are strong indicators of a bot.
-- MESSAGE CONTENT: Messages suggesting "having fun", "making money", "winning", or containing suspicious links are likely from bots or spammers.
+- MESSAGE CONTENT: Messages suggesting "having fun", "making money", "winning", or containing suspicious links are likely from bots or spammers. Also, promoting fishy jobs, "easy money grabs", etc. is considered spam.
 - USER ID: All Telegram User IDs are large integers. This is just for context.
 
 Analyze the content provided (user metadata, message text, and any images) and respond with a single, clean JSON object
