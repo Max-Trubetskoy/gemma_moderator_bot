@@ -19,4 +19,4 @@ COPY . .
 
 # 6. Define the command to run the synchronous Gunicorn server
 #    This matches the approach in the guide.
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "1", "--worker-class", "uvicorn.workers.UvicornWorker", "--timeout", "120", "bot:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "1", "--worker-class", "uvicorn.workers.UvicornWorker", "--timeout", "120", "main:asgi_app"]
