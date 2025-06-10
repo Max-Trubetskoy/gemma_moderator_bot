@@ -9,6 +9,7 @@ from google.genai.types import Part
 from google.genai import types
 from google import genai
 import asyncio
+from a2wsgi import ASGIMiddleware # <<< ADDED: Import the ASGI adapter
 
 # --- Configuration and Initialization ---
 
@@ -187,56 +188,29 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         except Exception as e:
             logger.error(f"Failed to ban user {user_name}: {e}. The bot might be missing admin permissions.")
 
+
 # --- Flask Web Server ---
-
 app = Flask(__name__)
-
-# <<< FIXED: Initialize bot and application once in the global scope
-bot = Bot(token=TELEGRAM_BOT_TOKEN)
-application = Application.builder().bot(bot).build()
-application.add_handler(MessageHandler(filters.TEXT | filters.PHOTO | filters.CAPTION, handle_message))
-
-# @app.route('/webhook', methods=['POST'])
-# def webhook(): # <-- REMOVED 'async'
-#     """A synchronous webhook for the final debug test."""
-#     logger.info("DEBUG: Synchronous webhook was called successfully!")
-#     return Response('ok - synchronous success', status=200)
+bot_app = Application.builder().bot(Bot(token=TELEGRAM_BOT_TOKEN)).build()
+bot_app.add_handler(MessageHandler(filters.TEXT | filters.PHOTO | filters.CAPTION, handle_message))
 
 @app.route('/webhook', methods=['POST'])
 async def webhook():
-    """Webhook endpoint to receive updates from Telegram."""
-    # 1. Authenticate the request
+    """Webhook endpoint to receive updates from Telegram (ASYNC)."""
     if request.headers.get("X-Telegram-Bot-Api-Secret-Token") != WEBHOOK_SECRET_TOKEN:
-        logger.warning("Unauthorized webhook call received: Invalid secret token.")
         return Response("Unauthorized", status=403)
-
-    # 2. Try to parse the request from Telegram
-    try:
-        update_data = await request.get_json()
-    except Exception as e:
-        logger.error(f"Error parsing JSON from webhook request: {e}")
-        return Response("Error: Could not parse request", status=400) # Bad Request
-
-    # At this point, 'update_data' is valid JSON. Now create the Update object.
-    update = Update.de_json(data=update_data, bot=bot)
     
-    # 3. Process the update
     try:
-        # Use the application instance that was initialized at startup
-        await application.process_update(update)
+        update = Update.de_json(await request.get_json(), bot_app.bot)
+        await bot_app.process_update(update)
         return Response('ok', status=200)
     except Exception as e:
-        # If processing fails, we have the 'update' object for logging
-        logger.error(f"Error processing update_id {update.update_id}: {e}", exc_info=True)
-        return Response('Error: Failed to process update', status=500)
+        logger.error(f"Error processing update: {e}", exc_info=True)
+        return Response('Error', status=500)
 
 @app.route('/')
-async def index():
-    """A simple endpoint to confirm the bot is running."""
+def index():
     return "Telegram moderation bot is alive!", 200
 
-if __name__ == "__main__":
-    # This block is for local testing and will not be used on Cloud Run
-    port = int(os.environ.get("PORT", 8080))
-    logger.info(f"Starting Flask app locally on port {port}")
-    app.run(debug=True, host="0.0.0.0", port=port)
+# <<< ADDED: Wrap the Flask app with the ASGI middleware
+asgi_app = ASGIMiddleware(app)
