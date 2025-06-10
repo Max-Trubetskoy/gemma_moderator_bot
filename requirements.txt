@@ -1,0 +1,6 @@
+# requirements.txt
+Flask
+gunicorn
+python-telegram-bot
+google-genai
+Pillow
