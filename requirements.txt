@@ -1,6 +1,7 @@
 # requirements.txt
 Flask
 gunicorn
+uvicorn
 python-telegram-bot
 google-genai
 Pillow
