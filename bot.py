@@ -142,12 +142,24 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         except Exception as e:
             logger.error(f"Failed to ban user {user_name}: {e}")
 
-# --- FastAPI Web Server ---
-# The 'app' variable is now a FastAPI instance
-app = FastAPI()
+
 # We still create the bot_app instance from python-telegram-bot
 bot_app = Application.builder().bot(Bot(token=TELEGRAM_BOT_TOKEN)).build()
 bot_app.add_handler(MessageHandler(filters.TEXT | filters.PHOTO | filters.CAPTION, handle_message))
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Handles bot initialization and shutdown."""
+    await bot_app.initialize()
+    logger.info("Bot application initialized.")
+    yield
+    await bot_app.shutdown()
+    logger.info("Bot application shut down.")
+
+# The 'app' variable is now a FastAPI instance with a lifespan manager
+app = FastAPI(lifespan=lifespan)
+
+
 
 @app.post('/webhook')
 async def webhook(
