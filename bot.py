@@ -80,10 +80,10 @@ async def classify_content(message_text, photo_bytes=None, profile_photo_bytes=N
     try:
         parts = [MODERATION_PROMPT]
         if message_text: parts.append(message_text)
-        if photo_bytes: parts.append(Part.from_data(photo_bytes, mime_type='image/jpeg'))
+        if photo_bytes: parts.append(Part.from_bytes(data=photo_bytes, mime_type='image/jpeg'))
         if profile_photo_bytes:
             parts.append("\n--- User's Profile Picture ---")
-            parts.append(Part.from_data(profile_photo_bytes, mime_type='image/jpeg'))
+            parts.append(Part.from_bytes(data=profile_photo_bytes, mime_type='image/jpeg'))
 
         response = gemini_client_instance.models.generate_content(
             model="gemma-3-27b-it",
