@@ -39,6 +39,7 @@ If the message is recruiting workers for a job, it is likely a bot.
 If the message suggests "having fun", "making money", "easy cash", or similar phrases, it is likely a bot.
 If the message is simply mentioning ads in general, but does not contain any links, or telegram usernames (following "@" or t.me/), it is not spam (safe).
 If the message uses some form of explicit language or defames someone, it is permissible, as long as it is not directed at a group of people.
+Do not delete messages that do not try to sell anything, and do not contain anything immediately harmful in the profile.
 These are just some examples; you should use your best judgment to classify the content.
 
 Analyze the content provided and respond with a single, clean JSON object containing two keys:
