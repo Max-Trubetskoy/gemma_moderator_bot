@@ -88,7 +88,7 @@ async def classify_content(message_text, photo_bytes=None, profile_photo_bytes=N
         response = gemini_client_instance.models.generate_content(
             model="gemma-3-27b-it",
             contents=parts,
-            generation_config=generation_config
+            config=generation_config
         )
         cleaned_response = response.text.strip().replace('```json', '').replace('```', '').strip()
         logger.info(f"Gemini raw response: {cleaned_response}")
