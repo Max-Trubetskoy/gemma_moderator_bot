@@ -137,7 +137,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     classification = await classify_content(analysis_text, photo_bytes, profile_photo_bytes)
     category = classification.get("category", "ERROR").upper()
     
-    if category in ["NUDITY", "VIOLENCE", "CASINO_ADS"]:
+    if category in ["NUDITY", "VIOLENCE", "CASINO_ADS", "SPAM"]:
         try:
             await message.delete()
             await context.bot.ban_chat_member(chat_id=chat_id, user_id=user_id)
