@@ -1,8 +1,6 @@
-# requirements.txt
-Flask[async]
-gunicorn
+fastapi
 uvicorn
 python-telegram-bot
 google-genai
 Pillow
-a2wsgi
+
