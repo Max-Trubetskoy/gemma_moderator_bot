@@ -15,8 +15,9 @@ This repository contains the complete source code for a serverless, AI-powered m
 - Web Server: Uvicorn
 - Hosting Platform: Google Cloud Run
 - Containerization: Docker
-- Project Structure
-- The repository is structured simply:
+
+## Project Structure
+The repository is structured simply:
 ```
 ├── bot.py              # The main FastAPI application and bot logic
 ├── Dockerfile          # Instructions to build the container image
