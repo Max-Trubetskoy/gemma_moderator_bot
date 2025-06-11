@@ -37,6 +37,7 @@ If the name of the profile contains a mixture of Cyrillic and Latin/Unicode char
 If the profile image contains NSFW content, it is likely a bot.
 If the message is recruiting workers for a job, it is likely a bot.
 If the message suggests "having fun", "making money", "easy cash", or similar phrases, it is likely a bot.
+If the message is simply mentioning ads in general, but does not contain any links, or telegram usernames (following "@" or t.me/), it is not spam (safe).
 These are just some examples; you should use your best judgment to classify the content.
 
 Analyze the content provided and respond with a single, clean JSON object containing two keys:
@@ -135,7 +136,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     classification = await classify_content(analysis_text, photo_bytes, profile_photo_bytes)
     category = classification.get("category", "ERROR").upper()
     
-    if category in ["NUDITY", "VIOLENCE", "CASINO_ADS", "SPAM"]:
+    if category in ["NUDITY", "VIOLENCE", "CASINO_ADS"]:
         try:
             await message.delete()
             await context.bot.ban_chat_member(chat_id=chat_id, user_id=user_id)
