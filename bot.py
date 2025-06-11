@@ -9,6 +9,7 @@ from telegram.ext import Application, MessageHandler, filters, ContextTypes
 from google.genai.types import HarmCategory, HarmBlockThreshold, Part
 from google.genai import types, Client
 import asyncio
+from contextlib import asynccontextmanager
 
 # --- Configuration and Initialization ---
 TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
